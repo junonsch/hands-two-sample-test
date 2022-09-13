@@ -129,6 +129,40 @@ def get_dogstest_supervised(test_type='dfda', device='cpu'):
         raise NotImplementedError()
     return T
 
+def get_hands_transfer(test_type='dfda', device='cpu'):
+    '''Load deep 2-sample test with pretraining on 11k Hands
+
+    This is the test used for the hands classification task (regularities/irregularities)
+
+    # Parameters:
+    test_type (str): which test statistic to use, possible values are 'dfda', 'dmmd' or 'c2st' 
+    device (str): which cpu/cuda device to use
+    '''
+    path = 'models/HandsWeights.pt'
+    weights = torch.load(path, map_location='cpu')
+    from experiments.handsmodel import model_conv
+    model = model_conv
+    model.load_state_dict(weights)
+   # model = nn.Sequential(model.encoder[:-1], FlattenLayer(), nn.Tanh())
+
+   # set_parameters_grad(model, requires_grad=False)
+    model = model.to(device)
+    model.eval()
+
+    if test_type == 'dfda':
+        T = DFDATest(model, reshape=None, device=device)
+    elif test_type == 'dmmd':
+        T = DMMDTest(model, reshape=None, device=device, n_perm=1000)
+    elif test_type == 'dmmd_kernel':
+        T = DMMDKernelTest(model, reshape=None, device=device, kernel_opt=False, n_perm=1000)
+    elif test_type == 'c2st':
+        T = TransferC2ST(model, model_d, device=device, reshape=None)
+    else:
+        raise NotImplementedError()
+    return T
+
+
+
 
 #################################
 ##### Models for retrieval ######
