@@ -3,7 +3,7 @@ from torch.utils.data import WeightedRandomSampler
 import os
 import numpy as np
 import torch
-data_dir = "../transfer/data/hands/Hands/Hands"
+data_dir = "../../transfer_hands/data/hands/Hands/Hands"
 
 
 DATA_TRANSFORMS = {
@@ -43,6 +43,8 @@ def weighted_sampling(data):
     return sampler
 
 train_sampler = weighted_sampling(image_datasets["train"])
+val_sampler = weighted_sampling(image_datasets["val"])
+test_sampler = weighted_sampling(image_datasets["test"])
 
 samplers = {"train": train_sampler,
            "val": None,#val_sampler,

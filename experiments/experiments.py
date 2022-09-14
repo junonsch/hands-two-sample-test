@@ -1,7 +1,7 @@
 from deeptest import *
 import os
 print(os.getcwd())
-RESULTS_DIR = 'experiments/results/'
+RESULTS_DIR = 'results/'
 
 from deeptest.data import TestData
 
@@ -37,11 +37,11 @@ class HandsData(TestData):
             
     def load_classes(self):
 
-        from hands import DATA_TRANSFORMS, train_sampler
+        from hands import DATA_TRANSFORMS, val_sampler
 
-        tset = torchvision.datasets.ImageFolder("../transfer/data/hands/Hands/Hands/train", transform=DATA_TRANSFORMS["train"])
+        tset = torchvision.datasets.ImageFolder("../../transfer_hands/data/hands/Hands/Hands/val", transform=DATA_TRANSFORMS["val"])
         loader = torch.utils.data.DataLoader(tset, batch_size=200, num_workers=8,
-         sampler=train_sampler)
+         sampler=val_sampler)
 
         all_class_c0 = []
         all_class_c1 = []
@@ -62,7 +62,7 @@ def get_hands_transfer(test_type='dfda', device='cpu'):
     test_type (str): which test statistic to use, possible values are 'dfda', 'dmmd' or 'c2st' 
     device (str): which cpu/cuda device to use
     '''
-    path = 'models/HandsWeights.pt'
+    path = '../models/HandsWeights.pt'
     weights = torch.load(path, map_location='cpu')
     from handsmodel import model_conv
     model = model_conv

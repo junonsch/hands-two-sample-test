@@ -30,7 +30,7 @@ class EmbeddingTest(TwoSampleTest):
         self.model.eval()
 
     def _pca(self, data):
-        #d = np.sqrt(len(data)/2.).round().astype(int)
+        d = np.sqrt(len(data)/2.).round().astype(int)
         pca = PCA(n_components=2)
         return pca.fit_transform(data)
 
